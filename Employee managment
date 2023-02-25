@@ -1,0 +1,99 @@
+import java.sql.*;
+import java.util.Scanner;
+
+public class EmployeeManagementSystem {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "");
+            stmt = conn.createStatement();
+            while (true) {
+                System.out.println("Enter option:");
+                System.out.println("1. Add Employee");
+                System.out.println("2. Modify Employee");
+                System.out.println("3. Delete Employee");
+                System.out.println("4. Manage Attendance");
+                System.out.println("5. Manage Payroll");
+                System.out.println("6. Generate Reports");
+                System.out.println("7. Exit");
+                int option = scanner.nextInt();
+                switch (option) {
+                    case 1:
+                        addEmployee(scanner, stmt);
+                        break;
+                    case 2:
+                        modifyEmployee(scanner, stmt);
+                        break;
+                    case 3:
+                        deleteEmployee(scanner, stmt);
+                        break;
+                    case 4:
+                        manageAttendance(scanner, stmt);
+                        break;
+                    case 5:
+                        managePayroll(scanner, stmt);
+                        break;
+                    case 6:
+                        generateReports(scanner, stmt);
+                        break;
+                    case 7:
+                        scanner.close();
+                        stmt.close();
+                        conn.close();
+                        System.exit(0);
+                    default:
+                        System.out.println("Invalid option");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void addEmployee(Scanner scanner, Statement stmt) {
+        try {
+            System.out.println("Enter employee details:");
+            System.out.print("Name: ");
+            String name = scanner.next();
+            System.out.print("Address: ");
+            String address = scanner.next();
+            System.out.print("Phone: ");
+            String phone = scanner.next();
+            System.out.print("Email: ");
+            String email = scanner.next();
+            System.out.print("Job Title: ");
+            String jobTitle = scanner.next();
+            System.out.print("Department: ");
+            String department = scanner.next();
+            System.out.print("Salary: ");
+            double salary = scanner.nextDouble();
+            String sql = "INSERT INTO employee (name, address, phone, email, job_title, department, salary) " +
+                    "VALUES ('" + name + "', '" + address + "', '" + phone + "', '" + email + "', '" + jobTitle + "', '" + department + "', " + salary + ")";
+            stmt.executeUpdate(sql);
+            System.out.println("Employee added successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void modifyEmployee(Scanner scanner, Statement stmt) {
+        try {
+            System.out.println("Enter employee id:");
+            int id = scanner.nextInt();
+            String sql = "SELECT * FROM employee WHERE id=" + id;
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                System.out.println("Enter employee details:");
+                System.out.print("Name: ");
+                String name = scanner.next();
+                System.out.print("Address: ");
+                String address = scanner.next();
+                System.out.print("Phone: ");
+                String phone = scanner.next();
+                System.out.print("Email: ");
+                String email = scanner.next();
+                System.out.print("Job Title: ");
+               
